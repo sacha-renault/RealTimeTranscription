@@ -5,13 +5,12 @@ import Recorder from './Recorder.vue'
 import { VoskResult, VoskPartialResult } from '../vosk'
 
 const isListening = ref(false);
-const transcriptedMessages = ref<Array<string>>([]);
-const currentMessage = ref("");
+const transcriptedMessages = ref<Array<string>>([""]);
 const chatMessageContainer = ref<HTMLElement | null>(null);
 
 const onPartial = (partial: VoskPartialResult) => {
     if (isListening.value) {
-        currentMessage.value = partial.result.partial;
+        transcriptedMessages.value[transcriptedMessages.value.length - 1] = partial.result.partial;
         scrollToBottom();
     }
 }
@@ -19,24 +18,19 @@ const onPartial = (partial: VoskPartialResult) => {
 const onResult = (result: VoskResult) => {
     const resultText = result.result.text;
     if (isListening.value && resultText !== "") {
-        transcriptedMessages.value.push(resultText);
-        scrollToBottom();
+        transcriptedMessages.value[transcriptedMessages.value.length - 1] = resultText;
+        transcriptedMessages.value.push("");
+        // scrollToBottom();
     } 
 }
 
 const scrollToBottom = () => {
   nextTick(() => {
     if (chatMessageContainer.value) {
-        chatMessageContainer.value.scrollTop = chatMessageContainer.value.scrollHeight;
         const container = chatMessageContainer.value;
         if (container.scrollHeight > container.clientHeight) {
             container.scrollTop = container.scrollHeight;
-            console.log("SCROLL!!!")
-        } else {
-            console.log("Nothing to scroll :)")
         }
-    } else {
-        console.log("No element to scroll");
     }
   });
 };
@@ -51,20 +45,15 @@ onMounted(() => {
         <div class="chat-message-container" id="chat-message-container">
             <n-empty 
                 description="No messages, start a record !"
-                v-if="transcriptedMessages.length === 0"/>
+                v-if="transcriptedMessages[0].trim() === ''"/>
 
-            <n-flex vertical align="center"
-                v-else>
-                <n-card v-for="m in transcriptedMessages" class="card-message">
-                    {{ m }}
-                </n-card>
-                <!-- <n-card v-if="currentMessage !== ''" class="card-message">
-                    {{ currentMessage }}
-                </n-card> -->
+            <n-flex vertical v-else>
+                <n-flex vertical v-for="(m, index) in transcriptedMessages" style="width: 100%;" align="center">
+                    <n-card :key="index" class="card-message" v-if="m.trim() !== ''">
+                        {{ m }}
+                    </n-card>
+                </n-flex>               
             </n-flex>
-            
-            <!-- <c-message v-else v-for="m in transcriptedMessages" :message="m"/>
-            <c-message :message="currentMessage" v-if="currentMessage.length !== 0"/> -->
             
         </div>
         <recorder class="sticky-input"

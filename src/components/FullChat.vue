@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, nextTick, onMounted, onBeforeUnmount } from 'vue'
+import { ref, nextTick, onMounted } from 'vue'
 import { NEmpty, NCard } from 'naive-ui';
 import Recorder from './Recorder.vue'
 import { VoskResult, VoskPartialResult } from '../vosk'
@@ -8,7 +8,6 @@ const isListening = ref(false);
 const transcriptedMessages = ref<Array<string>>([]);
 const currentMessage = ref("");
 const chatMessageContainer = ref<HTMLElement | null>(null);
-let resizeObserver: ResizeObserver | null = null;
 
 const onPartial = (partial: VoskPartialResult) => {
     if (isListening.value) {
@@ -21,6 +20,7 @@ const onResult = (result: VoskResult) => {
     const resultText = result.result.text;
     if (isListening.value && resultText !== "") {
         transcriptedMessages.value.push(resultText);
+        scrollToBottom();
     } 
 }
 
@@ -28,6 +28,13 @@ const scrollToBottom = () => {
   nextTick(() => {
     if (chatMessageContainer.value) {
         chatMessageContainer.value.scrollTop = chatMessageContainer.value.scrollHeight;
+        const container = chatMessageContainer.value;
+        if (container.scrollHeight > container.clientHeight) {
+            container.scrollTop = container.scrollHeight;
+            console.log("SCROLL!!!")
+        } else {
+            console.log("Nothing to scroll :)")
+        }
     } else {
         console.log("No element to scroll");
     }
@@ -36,18 +43,6 @@ const scrollToBottom = () => {
 
 onMounted(() => {
   chatMessageContainer.value = document.getElementById("chat-message-container") as HTMLElement;
-  if (chatMessageContainer.value) {
-    resizeObserver = new ResizeObserver(() => {
-      scrollToBottom();
-    });
-    resizeObserver.observe(chatMessageContainer.value);
-  }
-});
-
-onBeforeUnmount(() => {
-  if (resizeObserver && chatMessageContainer.value) {
-    resizeObserver.unobserve(chatMessageContainer.value);
-  }
 });
 </script>
 
@@ -63,9 +58,9 @@ onBeforeUnmount(() => {
                 <n-card v-for="m in transcriptedMessages" class="card-message">
                     {{ m }}
                 </n-card>
-                <n-card v-if="currentMessage !== ''" class="card-message">
+                <!-- <n-card v-if="currentMessage !== ''" class="card-message">
                     {{ currentMessage }}
-                </n-card>
+                </n-card> -->
             </n-flex>
             
             <!-- <c-message v-else v-for="m in transcriptedMessages" :message="m"/>

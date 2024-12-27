@@ -2,12 +2,13 @@
   <n-config-provider :theme="themeUsed ? darkTheme : lightTheme">
     <n-message-provider>
       <main-vue @update-theme="handleTheme"/>
+      <n-global-style />
     </n-message-provider>
   </n-config-provider>
 </template>
 
 <script setup lang="ts">
-import { darkTheme, lightTheme, NMessageProvider, NConfigProvider } from 'naive-ui'
+import { darkTheme, lightTheme, NMessageProvider, NConfigProvider, NGlobalStyle } from 'naive-ui'
 import MainVue from './views/MainVue.vue'
 import { ref } from 'vue'
 

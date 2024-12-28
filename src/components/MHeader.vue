@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { NFlex, NButton, NSwitch } from 'naive-ui'
-import { SoundWaveCircle24Filled, Settings16Filled, ClipboardTextLtr24Filled, Dismiss48Filled } from "@vicons/fluent"
+import { SoundWaveCircle24Filled, Settings16Filled } from "@vicons/fluent"
 import { defineEmits } from 'vue'
 import { useThemeStore } from '../store/themeStore'
+import MDrawer from './MDrawer.vue'
 
 // For the store
 const store = useThemeStore();
@@ -48,32 +49,7 @@ const drawerOut = ref(false);
             </n-button>
         </n-flex>
     </n-flex>
-    <n-drawer v-model:show="drawerOut" :width="502" placement="left">
-        <n-drawer-content>
-            <!-- Header -->
-            <template #header>
-                <n-flex align="center">
-                    <ClipboardTextLtr24Filled style="height: 32px;"/>
-                    Previous transcriptions
-                </n-flex>
-            </template>
-
-            <!-- content will be put here -->
-            salut moi c'est sacha
-
-            <!-- Footer -->
-            <template #footer>
-                <n-button 
-                    primary
-                    type="error"
-                    @click="() => drawerOut=false">
-                    <template #icon>
-                        <Dismiss48Filled/>
-                    </template>
-                </n-button>
-            </template>
-        </n-drawer-content>
-    </n-drawer>
+    <m-drawer v-model="drawerOut"/>
 </template>
 
 <style scoped>

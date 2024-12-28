@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { NFlex, NButton, NSwitch } from 'naive-ui'
-import { SoundWaveCircle24Filled, Settings16Filled } from "@vicons/fluent"
+import { NFlex, NSwitch } from 'naive-ui'
+import { SoundWaveCircle24Filled } from "@vicons/fluent"
 import { defineEmits } from 'vue'
 import { useThemeStore } from '../store/themeStore'
 import MDrawer from './MDrawer.vue'
@@ -23,17 +23,31 @@ const drawerOut = ref(false);
 </script>
 
 <template>
-    <n-flex class="m-header" justify="space-between">
-        <!-- Left part of the header -->
-        <n-flex align="center">
-            <SoundWaveCircle24Filled class="header-logo icon-big" @click="() => drawerOut = !drawerOut"/>
-            <h1>
-                Real Time Transcription
-            </h1>
+    <n-page-header subtitle="A podcast to improve designs" class="m-header">
+        <n-flex>
+            <n-breadcrumb>
+                <n-breadcrumb-item :clickable="false">
+                    <h4> Title here </h4>
+                </n-breadcrumb-item>
+                <n-breadcrumb-item> date here </n-breadcrumb-item>
+            </n-breadcrumb>
         </n-flex>
 
-        <!-- Right part of the header -->
-        <n-flex align="center">
+        <template #title>
+            <span style="text-decoration: none; color: inherit">
+                Real Time Transcription
+            </span>
+        </template>
+
+        <template #header>
+            <!-- Put something in header ? -->
+        </template>
+
+        <template #avatar>
+            <SoundWaveCircle24Filled class="header-logo icon-big" @click="() => drawerOut = !drawerOut"/>
+        </template>
+
+        <template #extra>
             <n-switch size="large" @update:value="handleChange">
                 <template #checked-icon>
                     🌙
@@ -42,13 +56,13 @@ const drawerOut = ref(false);
                     ☀️
                 </template>
             </n-switch>
-            <n-button size="large">
-                <template #icon>
-                    <Settings16Filled />
-                </template>
-            </n-button>
-        </n-flex>
-    </n-flex>
+        </template>
+
+        <template #back>
+            salut :)
+        </template>
+    </n-page-header>
+
     <m-drawer v-model="drawerOut" @chat-clicked="(id) => emit('chatClicked', id)"/>
 </template>
 

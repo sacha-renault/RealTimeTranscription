@@ -4,8 +4,8 @@ import { NList, NListItem, NInfiniteScroll, useMessage, NCard } from 'naive-ui'
 import NewTranscriptModal from '../modals/NewTranscriptModal.vue';
 import { 
     ClipboardTextLtr24Filled, 
-    DismissCircle32Filled as DismissIcon, 
-    AddCircle16Filled as AddIcon 
+    DismissCircle32Regular as DismissIcon, 
+    AddCircle16Regular as AddIcon 
 } from '@vicons/fluent'
 import { ChatDto } from '../interfaces';
 import { api } from '../api';
@@ -112,7 +112,7 @@ onMounted(async () => {
             <!-- Footer -->
             <template #footer>
                 <n-button 
-                    primary
+                    tertiary
                     type="error"
                     @click="onDimiss">
                     <template #icon>

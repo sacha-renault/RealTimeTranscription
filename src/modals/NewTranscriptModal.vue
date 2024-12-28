@@ -35,17 +35,19 @@
             <n-divider/>
 
             <template #footer>
-                <n-flex justify="space-between">
-                    <n-button @click="showModal = false" primary type="error">
-                        <template #icon>
-                            <DismissIcon/>
-                        </template>
-                    </n-button>
-                    <n-button @click="onValidate" primary type="success">
-                        <template #icon>
-                            <ValidateIcon/>
-                        </template>
-                    </n-button>
+                <n-flex justify="end">
+                    <n-button-group size="large">
+                        <n-button @click="showModal = false" tertiary type="error" round>
+                            <template #icon>
+                                <DismissIcon/>
+                            </template>
+                        </n-button>
+                        <n-button @click="onValidate" secondary type="success" round>
+                            <template #icon>
+                                <ValidateIcon/>
+                            </template>
+                        </n-button>
+                    </n-button-group>
                 </n-flex>
             </template>
         </n-card>
@@ -56,8 +58,8 @@
 import { defineModel, ref, defineEmits } from 'vue';
 import { useMessage } from 'naive-ui';
 import { 
-    DismissCircle32Filled as DismissIcon,
-    CheckmarkCircle12Filled as ValidateIcon
+    DismissCircle12Regular as DismissIcon,
+    CheckmarkCircle12Regular as ValidateIcon
 } from '@vicons/fluent'
 import { api } from '../api';
 

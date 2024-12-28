@@ -93,19 +93,19 @@ watch(
     <div class="messages-container">
 
         <!-- Old message part -->
-        <n-scrollbar ref="chatScrollbar" id="chat-message-container">
-            <div class="chat-message-container">
-                <n-empty 
-                    description="No messages, start a record !"
-                    v-if="transcriptedMessages.length === 0"/>
-                <n-flex vertical v-else>
-                    <n-flex vertical v-for="(m, index) in transcriptedMessages" style="width: 100%;" align="center">
-                        <n-card :key="index" class="card-message card-sizer">
-                            {{ m }}
-                        </n-card>
-                    </n-flex>               
-                </n-flex> 
-            </div>           
+        <n-scrollbar 
+            ref="chatScrollbar" 
+            id="chat-message-container">
+            <n-empty 
+                description="No messages, start a record !"
+                v-if="transcriptedMessages.length === 0"/>
+            <n-flex vertical v-else>
+                <n-flex vertical v-for="(m, index) in transcriptedMessages" style="width: 100%;" align="center">
+                    <n-card :key="index" class="card-message card-sizer">
+                        {{ m }}
+                    </n-card>
+                </n-flex>               
+            </n-flex> 
         </n-scrollbar>
 
         <n-divider/>

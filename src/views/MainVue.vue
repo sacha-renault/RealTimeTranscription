@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import MHeader from "../components/MHeader.vue";
 import FullChat from "../components/FullChat.vue";
-import Sider from "../components/Sider.vue";
 import { defineEmits, onMounted, ref, onUnmounted } from "vue";
 
 const chatHeight = ref<number>(0);
@@ -39,23 +38,11 @@ onUnmounted(() => {
       <m-header @update-switch="handleTheme" />
     </n-layout-header>
 
-    <n-layout has-sider>
-      <!-- Sidebar -->
-      <n-layout-sider 
-        show-trigger 
-        content-style="padding: 24px;" 
-        bordered
-        :show-collapsed-content="false"
-        :style="{ 'max-height': chatHeight + 'px' }">
-        <sider/>
-      </n-layout-sider>
-
-      <!-- Main Content Area -->
-      <n-layout :style="{ 'height': chatHeight + 'px' }">
+    <!-- Main Content Area -->
+    <n-layout :style="{ 'height': chatHeight + 'px' }">
         <!-- FullChat with Fixed Height -->
         <full-chat style="height: 100%"/>
       </n-layout>
-    </n-layout>
   </n-layout>
 </template>
 

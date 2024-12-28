@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, defineModel } from 'vue'
-import { NList, NListItem, NInfiniteScroll, useMessage } from 'naive-ui'
+import { NList, NListItem, NInfiniteScroll, useMessage, NCard } from 'naive-ui'
 import { ClipboardTextLtr24Filled, Dismiss48Filled } from '@vicons/fluent'
 import { ChatDto } from '../interfaces';
 
@@ -17,6 +17,7 @@ const onLoad = () => {
 const onChatClick = (chatId: number) => {
     emit('chatClicked', chatId);
     message.success("Clicked on " + chatId);
+    model.value = false;
 }
 
 const onDimiss = () => {
@@ -38,16 +39,15 @@ const onDimiss = () => {
             <!-- content will be put here -->
             <n-infinite-scroll @load="onLoad">
                 <n-list hoverable clickable>
-                    <n-list-item v-for="i in page" :key="i" @click="onChatClick(i)">
-                        <template #header>
-                            Header
-                        </template>
-                        <template #default>
+                    <n-list-item 
+                    class="list-item-drawer"
+                        v-for="i in page" :key="i" @click="onChatClick(i)">
+                        <n-card :bordered="false" :title="'title card ' + i" class="transparent-card">
                             number : {{ i }}
-                        </template>
-                        <template #footer>
-                            date
-                        </template>
+                            <template #footer>
+                                date card {{ i }}
+                            </template>
+                        </n-card>
                     </n-list-item>
                 </n-list>
             </n-infinite-scroll>
@@ -66,3 +66,13 @@ const onDimiss = () => {
         </n-drawer-content>
     </n-drawer>
 </template>
+
+<style scoped>
+.n-list-item.list-item-drawer {
+    padding: 0px;
+}
+
+.transparent-card {
+    background-color: transparent;
+}
+</style>

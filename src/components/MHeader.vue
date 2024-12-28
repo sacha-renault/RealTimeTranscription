@@ -1,14 +1,17 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { NFlex, NSwitch } from 'naive-ui'
-import { SoundWaveCircle24Filled } from "@vicons/fluent"
+import { NFlex, NSwitch, useMessage } from 'naive-ui'
+import { SoundWaveCircle24Filled, Options16Regular as OptionIcon } from "@vicons/fluent"
 import { defineEmits } from 'vue'
 import { useThemeStore } from '../store/themeStore'
 import MDrawer from './MDrawer.vue'
+import { formatDate } from '../utils'
+import { ChatDto } from '../interfaces'
+import { api } from '../api'
 
 // For the store
 const store = useThemeStore();
-
+const msgProvider = useMessage();
 // Define emits for parent communication
 const emit = defineEmits(['updateSwitch', 'chatClicked'])
 
@@ -18,18 +21,36 @@ const handleChange = (value: boolean) => {
     emit('updateSwitch', value);
 }
 
+// When we receive the event of new click on chat
+const onChatClicked = (id: number) => {
+    emit('chatClicked', id);
+    api.getChatById(id).then(d => {
+        chat.value = d;
+    }).catch(err => {
+        msgProvider.error("Unexpected error: " + err);
+    })
+}
+
+// open option modal?
+const onOptionClick = () => {
+    msgProvider.warning('Options clicked');
+}
+
 // Define if the drawer is active
 const drawerOut = ref(false);
+const chat = ref<ChatDto | null>(null)
 </script>
 
 <template>
-    <n-page-header subtitle="A podcast to improve designs" class="m-header">
+    <n-page-header class="m-header">
         <n-flex>
             <n-breadcrumb>
                 <n-breadcrumb-item :clickable="false">
-                    <h4> Title here </h4>
+                    <h4> {{ chat ? chat.title : "--"}} </h4>
                 </n-breadcrumb-item>
-                <n-breadcrumb-item> date here </n-breadcrumb-item>
+                <n-breadcrumb-item>
+                    {{ chat ? formatDate(new Date(chat.date)) : '--'}}
+                </n-breadcrumb-item>
             </n-breadcrumb>
         </n-flex>
 
@@ -48,22 +69,25 @@ const drawerOut = ref(false);
         </template>
 
         <template #extra>
-            <n-switch size="large" @update:value="handleChange">
-                <template #checked-icon>
-                    🌙
-                </template>
-                <template #unchecked-icon>
-                    ☀️
-                </template>
-            </n-switch>
-        </template>
-
-        <template #back>
-            salut :)
+            <n-flex align="center">
+                <n-switch size="large" @update:value="handleChange">
+                    <template #checked-icon>
+                        ☀️
+                    </template>
+                    <template #unchecked-icon>
+                        🌙
+                    </template>
+                </n-switch>
+                <n-button round @click="onOptionClick">
+                    <template #icon>
+                        <OptionIcon/>
+                    </template>
+                </n-button>
+            </n-flex>
         </template>
     </n-page-header>
 
-    <m-drawer v-model="drawerOut" @chat-clicked="(id) => emit('chatClicked', id)"/>
+    <m-drawer v-model="drawerOut" @chat-clicked="onChatClicked"/>
 </template>
 
 <style scoped>

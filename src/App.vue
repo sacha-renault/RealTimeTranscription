@@ -1,5 +1,5 @@
 <template>
-  <n-config-provider :theme="themeUsed ? darkTheme : lightTheme">
+  <n-config-provider :theme="themeUsed ? lightTheme : darkTheme">
     <n-modal-provider>
       <n-message-provider>
         <main-vue @update-theme="handleTheme"/>

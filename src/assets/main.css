@@ -5,3 +5,15 @@
 .w-full {
     width: 100%;
 }
+
+.icon-small {
+    height: 24px;
+}
+
+.icon-regular {
+    height: 36px;
+}
+
+.icon-big {
+    height: 48px;
+}

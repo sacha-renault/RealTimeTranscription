@@ -31,7 +31,7 @@ const onDimiss = () => {
             <!-- Header -->
             <template #header>
                 <n-flex align="center">
-                    <ClipboardTextLtr24Filled style="height: 32px;"/>
+                    <ClipboardTextLtr24Filled class="icon-regular"/>
                     Previous transcriptions
                 </n-flex>
             </template>

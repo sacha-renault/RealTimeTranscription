@@ -26,7 +26,7 @@ const drawerOut = ref(false);
     <n-flex class="m-header" justify="space-between">
         <!-- Left part of the header -->
         <n-flex align="center">
-            <SoundWaveCircle24Filled class="header-logo" @click="() => drawerOut = !drawerOut"/>
+            <SoundWaveCircle24Filled class="header-logo icon-big" @click="() => drawerOut = !drawerOut"/>
             <h1>
                 Real Time Transcription
             </h1>
@@ -58,7 +58,6 @@ const drawerOut = ref(false);
 }
 
 .header-logo{
-    height: 40px;
     cursor: pointer;
     transition: 0.25s ease-in-out;
 

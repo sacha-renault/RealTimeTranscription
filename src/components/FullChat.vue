@@ -2,6 +2,7 @@
 import { ref, nextTick } from 'vue'
 import { NEmpty, NCard, NPopover, NScrollbar } from 'naive-ui';
 import Recorder from './Recorder.vue'
+import CurrentCardMessage from './CurrentCardMessage.vue';
 import { VoskResult, VoskPartialResult } from '../vosk'
 
 const isListening = ref(false);
@@ -66,17 +67,7 @@ const scrollToBottom = () => {
         </n-scrollbar>
         <n-divider/>
         <n-flex vertical align="center" style="width: 100%;">
-            <n-card class="card-message">
-                <n-flex align="center">
-                    <n-popover trigger="hover">
-                        <template #trigger>
-                            <n-button @click="scrollToBottom"> Hover </n-button>
-                        </template>
-                        <span> This is the text that i currently being transcribed. </span>
-                    </n-popover>
-                    {{ currentMessage }}
-                </n-flex>
-            </n-card>
+            <current-card-message :current-message="currentMessage"/>
         </n-flex>
         <recorder class="sticky-input"
             @on-partial="onPartial"

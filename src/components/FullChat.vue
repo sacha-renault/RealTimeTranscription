@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, nextTick, defineProps, onMounted, watch } from 'vue'
-import { NEmpty, NCard, NScrollbar } from 'naive-ui';
+import { NEmpty, NCard, NScrollbar, useMessage } from 'naive-ui';
 import Recorder from './Recorder.vue'
 import CurrentCardMessage from './CurrentCardMessage.vue';
 import { VoskResult, VoskPartialResult } from '../vosk'
@@ -9,6 +9,7 @@ import { api } from '../api';
 const isListening = ref(false);
 const transcriptedMessages = ref<Array<string>>([]);
 const currentMessage = ref("");
+const msgProvider = useMessage();
 
 const props = defineProps<{
     chatId: number
@@ -17,16 +18,29 @@ const props = defineProps<{
 const onPartial = (partial: VoskPartialResult) => {
     if (isListening.value) {
         currentMessage.value = partial.result.partial;
-        
     }
 }
 
 const onResult = (result: VoskResult) => {
+    // we get the result of the message
     const resultText = result.result.text;
+
+    // ensure not empty message
     if (isListening.value && resultText !== "") {
+
+        // push it into the list of messages
         transcriptedMessages.value.push(resultText);
+
+        // Clear current
         currentMessage.value = "";
+
+        // excecute scroll
         scrollToBottom();
+
+        // call api to store the current message
+        api.addMessage(resultText, props.chatId).catch(err => {
+            msgProvider.error("Unexpected error occured: " + err)
+        });
     } 
 }
 
@@ -77,6 +91,8 @@ watch(
 
 <template>
     <div class="messages-container">
+
+        <!-- Old message part -->
         <n-scrollbar ref="chatScrollbar" id="chat-message-container">
             <div class="chat-message-container">
                 <n-empty 
@@ -84,17 +100,22 @@ watch(
                     v-if="transcriptedMessages.length === 0"/>
                 <n-flex vertical v-else>
                     <n-flex vertical v-for="(m, index) in transcriptedMessages" style="width: 100%;" align="center">
-                        <n-card :key="index" class="card-message">
+                        <n-card :key="index" class="card-message card-sizer">
                             {{ m }}
                         </n-card>
                     </n-flex>               
                 </n-flex> 
             </div>           
         </n-scrollbar>
+
         <n-divider/>
+
+        <!-- Current message part -->
         <n-flex vertical align="center" style="width: 100%;">
-            <current-card-message :current-message="currentMessage"/>
+            <current-card-message :current-message="currentMessage" class="card-sizer"/>
         </n-flex>
+
+        <!-- Recorder part -->
         <recorder class="sticky-input"
             @on-partial="onPartial"
             @on-result="onResult"
@@ -136,5 +157,9 @@ watch(
     margin-bottom: 1rem;
     width: 100%;
     border: solid 1px #fefefe;
+}
+
+.card-sizer {
+    max-width: var(--card-max-width);
 }
 </style>

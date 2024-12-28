@@ -1,4 +1,5 @@
 import { ChatDto, NewChatDto, ChatMessageDto } from "./interfaces";
+import { invoke } from "@tauri-apps/api/core";
 
 class Api {
     async getChatsByPage(page: number): Promise<ChatDto[]> {
@@ -28,8 +29,13 @@ class Api {
         return [{
             content: "message: " + chatId,
             id: 0,
-            date: new Date(Date.now())
+            date: new Date(Date.now()),
+            chatId: chatId,
         }]
+    }
+
+    async addMessage(message: string, chatId: number): Promise<void> {
+
     }
 }
 

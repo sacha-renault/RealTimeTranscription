@@ -14,4 +14,5 @@ export interface ChatMessageDto {
     date: Date;
     content: string;
     id: number;
+    chatId: number;
 }

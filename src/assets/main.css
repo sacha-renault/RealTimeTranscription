@@ -17,3 +17,7 @@
 .icon-big {
     height: 48px;
 }
+
+:root {
+    --card-max-width: 724px;
+}

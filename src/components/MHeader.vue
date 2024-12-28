@@ -10,7 +10,7 @@ import MDrawer from './MDrawer.vue'
 const store = useThemeStore();
 
 // Define emits for parent communication
-const emit = defineEmits(['updateSwitch'])
+const emit = defineEmits(['updateSwitch', 'chatClicked'])
 
 // handle change of theme
 const handleChange = (value: boolean) => {
@@ -49,7 +49,7 @@ const drawerOut = ref(false);
             </n-button>
         </n-flex>
     </n-flex>
-    <m-drawer v-model="drawerOut"/>
+    <m-drawer v-model="drawerOut" @chat-clicked="(id) => emit('chatClicked', id)"/>
 </template>
 
 <style scoped>

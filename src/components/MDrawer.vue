@@ -53,11 +53,13 @@ const onNew = () => {
 }
 
 const onNewTranscript = (id: number) => {
-    console.log(id);
+    api.getChatById(id).then(chat => {
+        allChats.value.unshift(chat);
+    })
 }
 
 onMounted(async () => {
-
+    addChats(page.value);
 });
 </script>
 
@@ -94,7 +96,7 @@ onMounted(async () => {
                 <n-list hoverable clickable>
                     <n-list-item 
                     class="list-item-drawer"
-                        v-for="chat, i in allChats" :key="i" @click="onChatClick(i)">
+                        v-for="chat in allChats" :key="chat.id" @click="onChatClick(chat.id)">
                         <n-card :bordered="false" :title="chat.title" class="transparent-card">
                             {{ chat.description }}
                             <template #footer >

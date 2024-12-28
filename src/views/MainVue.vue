@@ -4,6 +4,7 @@ import FullChat from "../components/FullChat.vue";
 import { defineEmits, onMounted, ref, onUnmounted } from "vue";
 
 const chatHeight = ref<number>(0);
+const chatIdSelected = ref<number | null>(null);
 const emit = defineEmits(["updateTheme"]);
 
 // Methods
@@ -35,13 +36,16 @@ onUnmounted(() => {
   <n-layout>
     <!-- Header -->
     <n-layout-header bordered class="header">
-      <m-header @update-switch="handleTheme" />
+      <m-header @update-switch="handleTheme" @chat-clicked="(id) => chatIdSelected = id"/>
     </n-layout-header>
 
     <!-- Main Content Area -->
     <n-layout :style="{ 'height': chatHeight + 'px' }">
         <!-- FullChat with Fixed Height -->
-        <full-chat style="height: 100%"/>
+        <full-chat 
+          v-if="chatIdSelected !== null"
+          style="height: 100%" 
+          :chatId="chatIdSelected"/>
       </n-layout>
   </n-layout>
 </template>

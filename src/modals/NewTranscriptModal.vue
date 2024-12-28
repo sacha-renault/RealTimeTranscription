@@ -57,7 +57,7 @@ import { defineModel, ref, defineEmits } from 'vue';
 import { useMessage } from 'naive-ui';
 import { 
     DismissCircle32Filled as DismissIcon,
-    Airplane20Filled as ValidateIcon
+    CheckmarkCircle12Filled as ValidateIcon
 } from '@vicons/fluent'
 import { api } from '../api';
 

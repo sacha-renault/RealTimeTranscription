@@ -9,3 +9,9 @@ export interface NewChatDto {
     title: string;
     description: string | null;
 }
+
+export interface ChatMessageDto {
+    date: Date;
+    content: string;
+    id: number;
+}

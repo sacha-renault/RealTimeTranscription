@@ -16,7 +16,7 @@ defineProps<{
                 <template #trigger>
                     <InfoIcon class="icon-regular"/>
                 </template>
-                <span> This is the text that is currently being transcribed. </span>
+                <span class="current-message-hover"> This is the text that is currently being transcribed. </span>
             </n-popover>
 
             <n-divider vertical />
@@ -31,6 +31,6 @@ defineProps<{
 
 <style scoped>
 .message-container {
-    width: 90%;
+    width: 85%;
 }
 </style>

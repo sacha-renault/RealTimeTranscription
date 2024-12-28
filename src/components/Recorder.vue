@@ -11,9 +11,9 @@ const message = useMessage();
 
 const modelLoading = ref(false);
 const voskObject = ref<VoskRecognitionObject | null>(null);
-const isListening = ref(false);
 const timer = ref<number | null>(null);
 const recordingDuration = ref(0);
+const isListening = defineModel({ required: true, default: false});
 
 // initialize available models
 const modelFiles = import.meta.glob("/public/models/*.zip"); // Adjust extension as needed
@@ -74,7 +74,6 @@ const loadModel = async (_: string, option: SelectOption) => {
 const buttonListenClick = () => {
     // switch listening
     isListening.value = !isListening.value;
-    emits('update:modelValue', isListening.value);
 
     // start the timer if it's recording
     if (isListening.value) {

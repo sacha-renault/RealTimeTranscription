@@ -1,13 +1,18 @@
 <script setup lang="ts">
-import { ref, nextTick } from 'vue'
-import { NEmpty, NCard, NPopover, NScrollbar } from 'naive-ui';
+import { ref, nextTick, defineProps, onMounted, watch } from 'vue'
+import { NEmpty, NCard, NScrollbar } from 'naive-ui';
 import Recorder from './Recorder.vue'
 import CurrentCardMessage from './CurrentCardMessage.vue';
 import { VoskResult, VoskPartialResult } from '../vosk'
+import { api } from '../api';
 
 const isListening = ref(false);
 const transcriptedMessages = ref<Array<string>>([]);
 const currentMessage = ref("");
+
+const props = defineProps<{
+    chatId: number
+}>();
 
 const onPartial = (partial: VoskPartialResult) => {
     if (isListening.value) {
@@ -47,6 +52,27 @@ const scrollToBottom = () => {
     });
 };
 
+onMounted(async () => {
+    const oldMessages = await api.getMessageByChatId(props.chatId);
+    transcriptedMessages.value.push(...oldMessages.map(m => m.content))
+})
+
+watch(
+  () => props.chatId, // Source to watch
+  async (newVal) => {
+    console.log('New chat id to display', newVal);
+
+    // reset message (new conversation)
+    transcriptedMessages.value = [];
+
+    // Stop record
+    isListening.value = false;
+
+    // Get the message of new conv on focus
+    const oldMessages = await api.getMessageByChatId(props.chatId);
+    transcriptedMessages.value.push(...oldMessages.map(m => m.content));
+  }
+);
 </script>
 
 <template>

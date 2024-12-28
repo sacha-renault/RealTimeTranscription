@@ -4,3 +4,8 @@ export interface ChatDto {
     description: string | null;
     date: Date;
 }
+
+export interface NewChatDto {
+    title: string;
+    description: string | null;
+}

@@ -103,6 +103,7 @@ const onValidate = () => {
 <style>
 .modal-new-transcript {
     width: 80%;
+    max-width: 512px;
     max-height: 80%;
 }
 </style>

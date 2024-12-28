@@ -16,7 +16,7 @@ defineProps<{
                 <template #trigger>
                     <InfoIcon class="icon-regular"/>
                 </template>
-                <span class="current-message-hover"> This is the text that is currently being transcribed. </span>
+                <span> This is the text that is currently being transcribed. </span>
             </n-popover>
 
             <n-divider vertical />
@@ -24,7 +24,6 @@ defineProps<{
             <!-- Main Content Area -->
             <span class="message-container">
                 {{ currentMessage }}
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nam, temporibus consequatur! Excepturi harum doloremque obcaecati ea, quae ut sequi error laboriosam voluptatum accusamus debitis recusandae ab sit neque mollitia itaque?
             </span>
         </n-flex>
     </n-card>

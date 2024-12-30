@@ -1,7 +1,11 @@
 use sqlx::sqlite::{SqliteConnection, SqlitePool};
 use sqlx::{Error, Executor};
 use std::path::Path;
+use std::sync::Arc;
+use tauri::async_runtime::Mutex;
 use tauri::{AppHandle, Manager};
+
+pub type DbConnection = Arc<Mutex<SqlitePool>>;
 
 async fn create_tables(pool: &SqlitePool) -> Result<(), Error> {
     let query = r#"
@@ -26,11 +30,11 @@ async fn create_tables(pool: &SqlitePool) -> Result<(), Error> {
     Ok(())
 }
 
-async fn connect_to_db(app: AppHandle) -> Result<SqlitePool, Error> {
+pub async fn connect_to_db(app: AppHandle) -> Result<DbConnection, Error> {
     // Get the app's data directory
     let app_data_dir = app
         .path()
-        .resource_dir()
+        .app_data_dir()
         .expect("Couldn't resolve the resource path.");
 
     // Ensure the directory exists
@@ -43,10 +47,11 @@ async fn connect_to_db(app: AppHandle) -> Result<SqlitePool, Error> {
     let db_path = app_data_dir.join(db_filename);
 
     // Connect to the db
-    let pool = SqlitePool::connect(&format!("sqlite://{}", db_path.display())).await?;
+    // This will create a file if it doesn't exist
+    let pool = SqlitePool::connect(&format!("sqlite://{}?mode=rwc", db_path.display())).await?;
 
     // Ensure the tables are created
     create_tables(&pool).await?;
 
-    Ok(pool)
+    Ok(Arc::new(Mutex::new(pool)))
 }

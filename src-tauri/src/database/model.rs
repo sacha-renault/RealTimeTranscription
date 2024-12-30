@@ -1,7 +1,8 @@
 use chrono::NaiveDateTime;
+use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
 
-#[derive(Debug, FromRow)]
+#[derive(Debug, FromRow, Serialize)]
 pub struct Chat {
     pub id: i64,
     pub title: String,
@@ -9,9 +10,9 @@ pub struct Chat {
     pub description: Option<String>,
 }
 
-#[derive(Debug, FromRow)]
+#[derive(Debug, FromRow, Serialize)]
 pub struct Message {
     pub id: i64,
-    pub chat_id: i64, // foreign key linking to Chat
+    pub chatId: i64, // foreign key linking to Chat
     pub content: String,
 }

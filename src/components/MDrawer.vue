@@ -5,7 +5,8 @@ import NewTranscriptModal from '../modals/NewTranscriptModal.vue';
 import { 
     ClipboardTextLtr24Filled, 
     DismissCircle32Regular as DismissIcon, 
-    AddCircle16Regular as AddIcon 
+    AddCircle16Regular as AddIcon,
+    Delete16Regular as DeleteIcon
 } from '@vicons/fluent'
 import { ChatDto } from '../interfaces';
 import { api } from '../api';
@@ -99,6 +100,17 @@ onMounted(async () => {
                         v-for="chat in allChats" :key="chat.id" @click="onChatClick(chat.id)">
                         <n-card :bordered="false" :title="chat.title" class="transparent-card">
                             {{ chat.description }}
+                            <template #header-extra>
+                                <n-button 
+                                    size="medium" 
+                                    secondary 
+                                    type="error"
+                                    @click.stop="() => console.log(chat.id)">
+                                    <template #icon>
+                                        <DeleteIcon/>
+                                    </template>
+                                </n-button>
+                            </template>
                             <template #footer >
                                 <span class="date-footer-small">
                                     {{ formatDate(chat.date) }}

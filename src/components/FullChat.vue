@@ -6,9 +6,10 @@ import CurrentCardMessage from './CurrentCardMessage.vue';
 import CardMessage from './CardMessage.vue';
 import { VoskResult, VoskPartialResult } from '../vosk'
 import { api } from '../api';
+import { ChatMessageDto } from '../interfaces';
 
 const isListening = ref(false);
-const transcriptedMessages = ref<Array<string>>([]);
+const transcriptedMessages = ref<Array<ChatMessageDto>>([]);
 const currentMessage = ref("");
 const msgProvider = useMessage();
 
@@ -28,10 +29,6 @@ const onResult = (result: VoskResult) => {
 
     // ensure not empty message
     if (isListening.value && resultText !== "") {
-
-        // push it into the list of messages
-        transcriptedMessages.value.push(resultText);
-
         // Clear current
         currentMessage.value = "";
 
@@ -39,7 +36,14 @@ const onResult = (result: VoskResult) => {
         scrollToBottom();
 
         // call api to store the current message
-        api.addMessage(resultText, props.chatId).catch(err => {
+        api.addMessage(resultText, props.chatId).then(id => {
+            transcriptedMessages.value.push({
+                content: resultText,
+                id: id,
+                chatId: props.chatId,
+                date: ""
+            });
+        }).catch(err => {
             msgProvider.error("Unexpected error occured: " + err)
         });
     } 
@@ -69,7 +73,7 @@ const scrollToBottom = () => {
 
 onMounted(async () => {
     const oldMessages = await api.getMessageByChatId(props.chatId);
-    transcriptedMessages.value.push(...oldMessages.map(m => m.content))
+    transcriptedMessages.value.push(...oldMessages)
 })
 
 watch(
@@ -86,7 +90,7 @@ watch(
 
         // Get the message of new conv on focus
         const oldMessages = await api.getMessageByChatId(props.chatId);
-        transcriptedMessages.value.push(...oldMessages.map(m => m.content));
+        transcriptedMessages.value.push(...oldMessages);
     }
   }
 );

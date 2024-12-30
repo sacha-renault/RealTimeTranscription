@@ -28,8 +28,9 @@ class Api {
         return result;
     }
 
-    async addMessage(message: string, chatId: number): Promise<void> {
-        await invoke('add_new_message', { chatId: chatId, content: message });
+    async addMessage(message: string, chatId: number): Promise<number> {
+        const result: number = await invoke('add_new_message', { chatId: chatId, content: message });
+        return result;
     }
 
     async deleteChat(chatId: number): Promise<void> {

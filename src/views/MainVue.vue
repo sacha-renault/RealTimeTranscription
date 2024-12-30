@@ -46,6 +46,9 @@ onUnmounted(() => {
           v-if="chatIdSelected !== null"
           style="height: 100%" 
           :chatId="chatIdSelected"/>
+        <n-empty v-else>
+          No transcription selected!
+        </n-empty>
       </n-layout>
   </n-layout>
 </template>

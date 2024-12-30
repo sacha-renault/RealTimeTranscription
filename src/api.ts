@@ -31,6 +31,10 @@ class Api {
     async addMessage(message: string, chatId: number): Promise<void> {
         await invoke('add_new_message', { chatId: chatId, content: message });
     }
+
+    async deleteChat(chatId: number): Promise<void> {
+        await invoke('remove_chat_by_id', { id: chatId });
+    }
 }
 
 export const api = new Api();

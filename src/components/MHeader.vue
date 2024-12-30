@@ -24,11 +24,15 @@ const handleChange = (value: boolean) => {
 // When we receive the event of new click on chat
 const onChatClicked = (id: number) => {
     emit('chatClicked', id);
-    api.getChatById(id).then(d => {
-        chat.value = d;
-    }).catch(err => {
-        msgProvider.error("Unexpected error: " + err);
-    })
+    if (id !== null) {
+        api.getChatById(id).then(d => {
+            chat.value = d;
+        }).catch(err => {
+            msgProvider.error("Unexpected error: " + err);
+        })
+    } else {
+        chat.value = null;
+    }
 }
 
 // open option modal?

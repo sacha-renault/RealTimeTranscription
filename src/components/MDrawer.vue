@@ -40,7 +40,6 @@ const addChats = async (pageNum: number) => {
 
 const onChatClick = (chatId: number) => {
     emit('chatClicked', chatId);
-    message.success("Clicked on " + chatId);
     model.value = false;
 }
 
@@ -56,7 +55,20 @@ const onNew = () => {
 const onNewTranscript = (id: number) => {
     api.getChatById(id).then(chat => {
         allChats.value.unshift(chat);
+        emit('chatClicked', id);
     })
+}
+
+const onDelete = (chatId: number) => {
+    api.deleteChat(chatId).then(() => {
+        const index = allChats.value.findIndex(chat => chat.id === chatId);
+        allChats.value.splice(index, 1);
+        message.success("Transcription deleted with success.")
+        emit('chatClicked', null);
+    }).catch(err => {
+        message.error("Error removing the transcription: " + err);
+    })
+    
 }
 
 onMounted(async () => {
@@ -101,15 +113,22 @@ onMounted(async () => {
                         <n-card :bordered="false" :title="chat.title" class="transparent-card">
                             {{ chat.description }}
                             <template #header-extra>
-                                <n-button 
-                                    size="medium" 
-                                    secondary 
-                                    type="error"
-                                    @click.stop="() => console.log(chat.id)">
-                                    <template #icon>
-                                        <DeleteIcon/>
+                                <n-popconfirm
+                                    @positive-click="onDelete(chat.id)"
+                                    @negative-click="() => console.log('Action cancelled.')">
+                                    <template #trigger>
+                                        <n-button 
+                                            size="tiny" 
+                                            secondary 
+                                            type="error"
+                                            @click.stop>
+                                            <template #icon>
+                                                <DeleteIcon/>
+                                            </template>
+                                        </n-button>
                                     </template>
-                                </n-button>
+                                    Confirm deleting this transcription ?
+                                </n-popconfirm>
                             </template>
                             <template #footer >
                                 <span class="date-footer-small">

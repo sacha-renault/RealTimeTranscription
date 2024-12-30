@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { ref, nextTick, defineProps, onMounted, watch } from 'vue'
-import { NEmpty, NCard, NScrollbar, useMessage } from 'naive-ui';
+import { NEmpty, NScrollbar, useMessage } from 'naive-ui';
 import Recorder from './Recorder.vue'
 import CurrentCardMessage from './CurrentCardMessage.vue';
+import CardMessage from './CardMessage.vue';
 import { VoskResult, VoskPartialResult } from '../vosk'
 import { api } from '../api';
 
@@ -76,15 +77,17 @@ watch(
   async (newVal) => {
     console.log('New chat id to display', newVal);
 
-    // reset message (new conversation)
-    transcriptedMessages.value = [];
+    if (newVal !== null) {
+        // reset message (new conversation)
+        transcriptedMessages.value = [];
 
-    // Stop record
-    isListening.value = false;
+        // Stop record
+        isListening.value = false;
 
-    // Get the message of new conv on focus
-    const oldMessages = await api.getMessageByChatId(props.chatId);
-    transcriptedMessages.value.push(...oldMessages.map(m => m.content));
+        // Get the message of new conv on focus
+        const oldMessages = await api.getMessageByChatId(props.chatId);
+        transcriptedMessages.value.push(...oldMessages.map(m => m.content));
+    }
   }
 );
 </script>
@@ -101,9 +104,7 @@ watch(
                 v-if="transcriptedMessages.length === 0"/>
             <n-flex vertical v-else>
                 <n-flex vertical v-for="(m, index) in transcriptedMessages" style="width: 100%;" align="center">
-                    <n-card :key="index" class="card-message card-sizer">
-                        {{ m }}
-                    </n-card>
+                    <card-message :key="index" :message="m" class="card-sizer" />
                 </n-flex>               
             </n-flex> 
         </n-scrollbar>
@@ -147,10 +148,6 @@ watch(
     flex-direction: column;
     justify-content: center;
     scroll-behavior: smooth;
-}
-
-.card-message{
-    width:80%;
 }
 
 .separator {

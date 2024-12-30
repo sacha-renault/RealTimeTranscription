@@ -119,3 +119,33 @@ pub async fn add_new_message(
     // Return the ID of the newly created chat
     Ok(result.last_insert_rowid())
 }
+
+pub async fn remove_chat_by_id(pool: &SqlitePool, id: i64) -> Result<(), Error> {
+    let mut tx = pool.begin().await?; // Begin a transaction
+
+    // Delete messages linked to the chat
+    sqlx::query(
+        r#"
+            DELETE FROM message
+            WHERE chatId = ?1
+            "#,
+    )
+    .bind(id)
+    .execute(&mut *tx)
+    .await?;
+
+    // Delete the chat
+    sqlx::query(
+        r#"
+            DELETE FROM chat
+            WHERE id = ?1
+            "#,
+    )
+    .bind(id)
+    .execute(&mut *tx)
+    .await?;
+
+    tx.commit().await?; // Commit the transaction
+
+    Ok(())
+}

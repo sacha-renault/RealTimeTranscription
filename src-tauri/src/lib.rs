@@ -95,6 +95,18 @@ async fn add_new_message(
         .map_err(|e| e.to_string())?)
 }
 
+#[tauri::command]
+async fn remove_chat_by_id(db: State<'_, DbConnection>, id: i64) -> Result<(), String> {
+    // log call
+    println!("User delete chat: {}", id);
+
+    // Retrieve the pool from managed state
+    let pool = db.lock().await;
+    Ok(functions::remove_chat_by_id(&pool, id)
+        .await
+        .map_err(|e| e.to_string())?)
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -112,7 +124,8 @@ pub fn run() {
             create_new_chat,
             get_chat_by_id,
             get_messages_by_chat_id,
-            add_new_message
+            add_new_message,
+            remove_chat_by_id
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -1,8 +1,12 @@
-export function formatDate(date: Date) {
+export function formatDate(dateString: string) {
+    // Parse the string to a Date object
+    const date = new Date(dateString.split('.')[0]);
+
+    // now date
     const now = new Date();
 
     // Check if the date is today
-    const isToday = now.toDateString() === date.toDateString();
+    const isToday = now.toDateString() === new Date(date).toDateString();
 
     // Check if the date is yesterday
     const yesterday = new Date();

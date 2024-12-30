@@ -49,7 +49,7 @@ const chat = ref<ChatDto | null>(null)
                     <h4> {{ chat ? chat.title : "--"}} </h4>
                 </n-breadcrumb-item>
                 <n-breadcrumb-item>
-                    {{ chat ? formatDate(new Date(chat.date)) : '--'}}
+                    {{ chat ? formatDate(chat.date) : '--'}}
                 </n-breadcrumb-item>
             </n-breadcrumb>
         </n-flex>

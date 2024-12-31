@@ -101,9 +101,6 @@ pub async fn add_new_message(
     chat_id: i64,
     content: String,
 ) -> Result<i64, Error> {
-    // Use now as date
-    let date = Utc::now().naive_utc();
-
     // insert new
     let result = sqlx::query(
         r"
@@ -147,5 +144,28 @@ pub async fn remove_chat_by_id(pool: &SqlitePool, id: i64) -> Result<(), Error> 
 
     tx.commit().await?; // Commit the transaction
 
+    Ok(())
+}
+
+pub async fn modify_chat_by_id(pool: &SqlitePool, id: i64, content: String) -> Result<(), Error> {
+    // query to modify only content
+    let result = sqlx::query(
+        r"
+        UPDATE message
+        SET content = ?1
+        WHERE id = ?2
+        ",
+    )
+    .bind(content) // Bind the title
+    .bind(id) // Bind the date
+    .execute(pool)
+    .await?;
+
+    // Check if any row was actually updated
+    if result.rows_affected() == 0 {
+        return Err(Error::RowNotFound);
+    }
+
+    // Return the ID of the newly created chat
     Ok(())
 }

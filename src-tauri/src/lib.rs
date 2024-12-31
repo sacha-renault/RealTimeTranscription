@@ -107,6 +107,22 @@ async fn remove_chat_by_id(db: State<'_, DbConnection>, id: i64) -> Result<(), S
         .map_err(|e| e.to_string())?)
 }
 
+#[tauri::command]
+async fn modify_chat_by_id(
+    db: State<'_, DbConnection>,
+    id: i64,
+    new_content: String,
+) -> Result<(), String> {
+    // log call
+    println!("User modify message: {}", id);
+
+    // Retrieve the pool from managed state
+    let pool = db.lock().await;
+    Ok(functions::modify_chat_by_id(&pool, id, new_content)
+        .await
+        .map_err(|e| e.to_string())?)
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -125,7 +141,8 @@ pub fn run() {
             get_chat_by_id,
             get_messages_by_chat_id,
             add_new_message,
-            remove_chat_by_id
+            remove_chat_by_id,
+            modify_chat_by_id
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -13,6 +13,8 @@ pub struct Chat {
 #[derive(Debug, FromRow, Serialize)]
 pub struct Message {
     pub id: i64,
+    // #[sqlx(rename = "chatId")]
+    // pub chat_id: i64,
     pub chatId: i64, // foreign key linking to Chat
     pub content: String,
 }
